@@ -1,0 +1,61 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: 1000
+        WWWUSER: 1000
+        COMPOSER_VERSION: 2.8.12
+    container_name: binnitaxi-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - binnitaxi
+
+  nginx:
+    image: nginx:1.28.0-alpine
+    container_name: binnitaxi-nginx
+    restart: unless-stopped
+    ports:
+      - "8001:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - binnitaxi
+
+  db:
+    image: mariadb:10.6.23
+    container_name: binnitaxi-db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_DATABASE: binnitaxi
+      MARIADB_USER: binnitaxi
+      MARIADB_PASSWORD: binnitaxi
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - binnitaxi
+
+networks:
+  binnitaxi:
+    driver: bridge
+
+volumes:
+  mariadb_data:
