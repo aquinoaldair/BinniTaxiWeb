@@ -19,12 +19,31 @@ docker compose exec app php artisan migrate
 ```
 
 La aplicación queda disponible en `http://localhost:8001`.
+Vite queda disponible en `http://localhost:5173`.
+
+## Comandos rápidos
+
+Con `make`:
+
+```bash
+make build
+make up
+make down
+make logs
+make ps
+make migrate
+make composer-install
+make npm-build
+make bash-app
+make bash-node
+```
 
 ## Servicios
 
 - `app`: contenedor PHP-FPM con las extensiones mínimas para Laravel
 - `nginx`: servidor web expuesto en el puerto `8001`
 - `db`: MariaDB `10.6.23` expuesta en el puerto `3307`
+- `node`: Vite sobre Node `22.12.0-alpine` expuesto en el puerto `5173`
 
 ## Base de datos
 
@@ -48,3 +67,27 @@ DB_DATABASE=binnitaxi
 DB_USERNAME=binnitaxi
 DB_PASSWORD=binnitaxi
 ```
+
+## Frontend con Docker
+
+Para iniciar también el entorno frontend:
+
+```bash
+docker compose up -d
+```
+
+El servicio `node` instala dependencias con `npm` dentro del contenedor y levanta Vite en modo desarrollo.
+
+Comandos útiles:
+
+```bash
+docker compose logs -f node
+docker compose exec node npm run build
+docker compose exec node npm install
+```
+
+Puertos del proyecto:
+
+- App Laravel: `http://localhost:8001`
+- Vite dev server: `http://localhost:5173`
+- MariaDB host: `127.0.0.1:3307`

@@ -32,6 +32,23 @@ services:
     networks:
       - binnitaxi
 
+  node:
+    image: node:22.12.0-alpine
+    container_name: binnitaxi-node
+    restart: unless-stopped
+    user: "0:0"
+    working_dir: /var/www/html
+    command: sh -c "mkdir -p /var/www/html/node_modules && if [ -f package-lock.json ]; then npm ci; else npm install; fi && chown -R 1000:1000 /var/www/html/node_modules /var/www/html/package-lock.json && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+      - node_modules:/var/www/html/node_modules
+    depends_on:
+      - app
+    networks:
+      - binnitaxi
+
   db:
     image: mariadb:10.6.23
     container_name: binnitaxi-db
@@ -59,3 +76,4 @@ networks:
 
 volumes:
   mariadb_data:
+  node_modules:
