@@ -50,20 +50,19 @@ services:
       - binnitaxi
 
   db:
-    image: mariadb:10.6.23
+    image: postgres:18.3
     container_name: binnitaxi-db
     restart: unless-stopped
     ports:
-      - "3307:3306"
+      - "5433:5432"
     environment:
-      MARIADB_DATABASE: binnitaxi
-      MARIADB_USER: binnitaxi
-      MARIADB_PASSWORD: binnitaxi
-      MARIADB_ROOT_PASSWORD: root
+      POSTGRES_DB: binnitaxi
+      POSTGRES_USER: binnitaxi
+      POSTGRES_PASSWORD: binnitaxi
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "pg_isready -U binnitaxi -d binnitaxi"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -75,5 +74,5 @@ networks:
     driver: bridge
 
 volumes:
-  mariadb_data:
+  postgres_data:
   node_modules:

@@ -10,6 +10,7 @@ RUN apt-get update \
         curl \
         unzip \
         libicu-dev \
+        libpq-dev \
         libzip-dev \
         libonig-dev \
         libxml2-dev \
@@ -17,7 +18,8 @@ RUN apt-get update \
     && docker-php-ext-install -j"$(nproc)" \
         bcmath \
         intl \
-        pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
