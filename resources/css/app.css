@@ -83,7 +83,11 @@
     }
 
     .form-input {
-        @apply w-full rounded-2xl border border-brand-200 bg-white px-4 py-3 text-brand-950 outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-100;
+        @apply w-full rounded-2xl border border-brand-200 bg-white/95 px-4 py-3.5 text-brand-950 outline-none transition placeholder:text-brand-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
+    }
+
+    .input-error {
+        @apply mt-2 text-sm font-medium text-red-600;
     }
 
     .stat-card {
