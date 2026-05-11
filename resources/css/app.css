@@ -4,6 +4,8 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.ts';
+@source '../**/*.vue';
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -40,5 +42,103 @@
     ::selection {
         background-color: color-mix(in srgb, var(--color-brand-300) 75%, white);
         color: var(--color-brand-950);
+    }
+}
+
+@layer components {
+    .panel {
+        @apply rounded-[2rem] border border-white/70 bg-white/85 p-6 shadow-xl shadow-brand-950/5 backdrop-blur md:p-8;
+    }
+
+    .eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.3em] text-brand-600;
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5;
+    }
+
+    .btn-primary {
+        @apply bg-brand-600 text-white shadow-lg shadow-brand-700/20 hover:bg-brand-700;
+    }
+
+    .btn-secondary {
+        @apply border border-brand-200 bg-white text-brand-800 hover:border-brand-300 hover:bg-brand-50;
+    }
+
+    .btn-danger {
+        @apply border border-red-200 bg-red-50 text-red-700 hover:bg-red-100;
+    }
+
+    .nav-link {
+        @apply rounded-full px-3 py-2 font-medium text-brand-700 transition hover:bg-brand-50 hover:text-brand-900;
+    }
+
+    .nav-link-active {
+        @apply bg-brand-100 text-brand-900;
+    }
+
+    .form-label {
+        @apply mb-2 block text-sm font-medium text-brand-900;
+    }
+
+    .form-input {
+        @apply w-full rounded-2xl border border-brand-200 bg-white px-4 py-3 text-brand-950 outline-none transition focus:border-brand-400 focus:ring-4 focus:ring-brand-100;
+    }
+
+    .stat-card {
+        @apply rounded-[1.75rem] border border-white/70 bg-white/80 p-6 shadow-lg shadow-brand-950/5;
+    }
+
+    .stat-label {
+        @apply text-sm font-medium uppercase tracking-[0.22em] text-brand-600;
+    }
+
+    .stat-value {
+        @apply mt-4 text-4xl font-semibold text-brand-950;
+    }
+
+    .stat-help {
+        @apply mt-2 text-sm text-brand-700;
+    }
+
+    .chip {
+        @apply rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-800;
+    }
+
+    .admin-shell {
+        @apply min-h-screen bg-[radial-gradient(circle_at_top,_rgba(46,139,87,0.18),_transparent_38%),linear-gradient(180deg,_#f7fcf8_0%,_#effaf2_50%,_#e4f4e8_100%)];
+    }
+
+    .metric-orb {
+        @apply absolute -right-8 -top-8 h-28 w-28 rounded-full bg-brand-200/70 blur-2xl;
+    }
+
+    .table-card {
+        @apply overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/90 shadow-lg shadow-brand-950/5;
+    }
+
+    .table-head {
+        @apply bg-brand-50 text-left text-xs font-semibold uppercase tracking-[0.2em] text-brand-700;
+    }
+
+    .table-cell {
+        @apply px-4 py-4 text-sm text-brand-800;
+    }
+
+    .input-hint {
+        @apply mt-2 text-xs text-brand-600;
+    }
+
+    .alert {
+        @apply rounded-2xl border px-4 py-3 text-sm;
+    }
+
+    .alert-success {
+        @apply border-brand-200 bg-brand-50 text-brand-800;
+    }
+
+    .alert-danger {
+        @apply border-red-200 bg-red-50 text-red-700;
     }
 }
