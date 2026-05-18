@@ -12,8 +12,8 @@ class SendTwilioWhatsAppMessageCommandTest extends TestCase
 {
     public function test_it_sends_a_whatsapp_message(): void
     {
-        $messenger = new class extends TwilioWhatsAppMessenger
-        {
+        $messenger = new class () extends TwilioWhatsAppMessenger {
+            /** @var list<array{to: string, body: string}> */
             public array $sentMessages = [];
 
             public function sendMessage(string $to, string $body): string
@@ -26,12 +26,16 @@ class SendTwilioWhatsAppMessageCommandTest extends TestCase
 
         $this->app->instance(TwilioWhatsAppMessenger::class, $messenger);
 
-        $this->artisan('twilio:whatsapp:send', [
+        /** @var \Illuminate\Testing\PendingCommand $command */
+        $command = $this->artisan('twilio:whatsapp:send', [
             'to' => '+5215555555555',
             'message' => 'Mensaje de prueba',
-        ])
+        ]);
+
+        $command
             ->expectsOutput('WhatsApp message sent to whatsapp:+5215555555555. SID: SM_COMMAND_123')
-            ->assertSuccessful();
+            ->assertSuccessful()
+            ->run();
 
         $this->assertSame([
             [
@@ -43,19 +47,22 @@ class SendTwilioWhatsAppMessageCommandTest extends TestCase
 
     public function test_it_reports_send_failures(): void
     {
-        $this->app->instance(TwilioWhatsAppMessenger::class, new class extends TwilioWhatsAppMessenger
-        {
+        $this->app->instance(TwilioWhatsAppMessenger::class, new class () extends TwilioWhatsAppMessenger {
             public function sendMessage(string $to, string $body): string
             {
                 throw new RuntimeException('Twilio rejected the request.');
             }
         });
 
-        $this->artisan('twilio:whatsapp:send', [
+        /** @var \Illuminate\Testing\PendingCommand $command */
+        $command = $this->artisan('twilio:whatsapp:send', [
             'to' => 'whatsapp:+5215555555555',
             'message' => 'Mensaje de prueba',
-        ])
+        ]);
+
+        $command
             ->expectsOutput('WhatsApp message could not be sent: Twilio rejected the request.')
-            ->assertFailed();
+            ->assertFailed()
+            ->run();
     }
 }

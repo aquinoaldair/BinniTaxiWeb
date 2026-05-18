@@ -12,8 +12,8 @@ class TwilioWhatsAppWebhookTest extends TestCase
 {
     public function test_it_logs_incoming_whatsapp_messages_and_replies_to_sender(): void
     {
-        $messenger = new class extends TwilioWhatsAppMessenger
-        {
+        $messenger = new class () extends TwilioWhatsAppMessenger {
+            /** @var list<array{to: string, body: string}> */
             public array $sentMessages = [];
 
             public function sendMessage(string $to, string $body): string
@@ -71,8 +71,8 @@ class TwilioWhatsAppWebhookTest extends TestCase
 
     public function test_it_does_not_reply_when_sender_is_missing(): void
     {
-        $messenger = new class extends TwilioWhatsAppMessenger
-        {
+        $messenger = new class () extends TwilioWhatsAppMessenger {
+            /** @var list<array{to: string, body: string}> */
             public array $sentMessages = [];
 
             public function sendMessage(string $to, string $body): string

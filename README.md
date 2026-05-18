@@ -48,6 +48,57 @@ make bash-app
 make bash-node
 ```
 
+## Formato de código con Pint
+
+El proyecto usa Laravel Pint para formatear PHP.
+
+Revisar formato sin modificar archivos:
+
+```bash
+composer format:test
+```
+
+Aplicar formato automáticamente:
+
+```bash
+composer format
+```
+
+Este comando solo aplica Pint a archivos PHP modificados o nuevos. Para formatear todo el proyecto:
+
+```bash
+composer format:all
+```
+
+Dentro de Docker:
+
+```bash
+docker compose exec app composer format:test
+docker compose exec app composer format
+```
+
+## Análisis estático con Larastan
+
+El proyecto usa Larastan sobre PHPStan para análisis estático de PHP.
+
+Ejecutar análisis:
+
+```bash
+composer analyse
+```
+
+Dentro de Docker:
+
+```bash
+docker compose exec app composer analyse
+```
+
+Si necesitas crear un baseline temporal para deuda técnica existente:
+
+```bash
+composer analyse:baseline
+```
+
 ## Servicios
 
 - `app`: contenedor PHP-FPM con las extensiones mínimas para Laravel

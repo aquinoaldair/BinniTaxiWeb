@@ -8,6 +8,7 @@ use App\Enums\PermissionName;
 use App\Enums\RoleName;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Contracts\Permission as PermissionContract;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -16,7 +17,7 @@ class AuthorizationSeeder extends Seeder
     public function run(): void
     {
         $permissions = collect(PermissionName::cases())
-            ->map(fn (PermissionName $permission): Permission => Permission::findOrCreate($permission->value, 'web'));
+            ->map(fn (PermissionName $permission): PermissionContract => Permission::findOrCreate($permission->value, 'web'));
 
         $administratorRole = Role::findOrCreate(RoleName::Administrator->value, 'web');
         $administratorRole->syncPermissions($permissions);

@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -43,7 +44,7 @@ class UserController extends Controller
             'form' => [
                 'name' => old('name', ''),
                 'email' => old('email', ''),
-                'roles' => array_map('intval', old('roles', [])),
+                'roles' => array_map('intval', Arr::wrap(old('roles', []))),
             ],
         ]);
     }
@@ -73,7 +74,7 @@ class UserController extends Controller
             'form' => [
                 'name' => old('name', $user->name),
                 'email' => old('email', $user->email),
-                'roles' => array_map('intval', old('roles', $user->roles->pluck('id')->all())),
+                'roles' => array_map('intval', Arr::wrap(old('roles', $user->roles->pluck('id')->all()))),
             ],
         ]);
     }
@@ -110,17 +111,19 @@ class UserController extends Controller
      */
     private function availableRoles(): array
     {
-        return Role::query()
+        return array_values(Role::query()
             ->orderBy('name')
             ->get()
             ->map(fn (Role $role): array => [
-                'id' => $role->id,
+                'id' => (int) $role->id,
                 'name' => $role->name,
             ])
-            ->all();
+            ->all());
     }
 
     /**
+     * @param LengthAwarePaginator<int, User> $users
+     *
      * @return array<string, mixed>
      */
     private function transformUsersPaginator(LengthAwarePaginator $users): array
