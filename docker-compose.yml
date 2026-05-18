@@ -10,10 +10,14 @@ services:
     container_name: binnitaxi-app
     restart: unless-stopped
     working_dir: /var/www/html
+    environment:
+      REDIS_HOST: redis
     volumes:
       - ./:/var/www/html
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - binnitaxi
@@ -69,10 +73,28 @@ services:
     networks:
       - binnitaxi
 
+  redis:
+    image: redis:8.0-alpine
+    container_name: binnitaxi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - binnitaxi
+
 networks:
   binnitaxi:
     driver: bridge
 
 volumes:
   postgres_data:
+  redis_data:
   node_modules:
